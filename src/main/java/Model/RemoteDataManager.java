@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Entities.CountryWeight;
+import Model.Entities.EtfData;
 import Model.Entities.Holding;
 import Model.Entities.SectorWeight;
 import org.jsoup.Jsoup;
@@ -105,5 +106,13 @@ public class RemoteDataManager {
             System.out.println("Error" + e);
         }
         return descriptionText;
+    }
+
+    public EtfData getEtfObject(String etfSymbol){
+        return new EtfData(etfSymbol,
+                           parseDescription(etfSymbol),
+                           parseTopTenHoldings(etfSymbol),
+                           parseCountryWeights(etfSymbol),
+                           parseSectorWeights(etfSymbol));
     }
 }

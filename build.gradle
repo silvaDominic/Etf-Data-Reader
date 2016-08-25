@@ -31,8 +31,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.2.RELEASE'
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
     compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.2.RELEASE'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
     testCompile("junit:junit")
 }
 

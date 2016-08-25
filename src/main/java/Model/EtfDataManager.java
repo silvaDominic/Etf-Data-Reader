@@ -1,9 +1,6 @@
 package Model;
 
 import Model.Entities.EtfData;
-import Model.Entities.Holding;
-
-import java.util.ArrayList;
 
 /**
  * Created by reclaimer on 8/24/16.
@@ -35,18 +32,10 @@ public class EtfDataManager {
     }
 
     private EtfData fetchRemotely(String etfSymbol){
-        return new EtfData(etfSymbol,
-                           remoteDataManager.parseDescription(etfSymbol),
-                           remoteDataManager.parseTopTenHoldings(etfSymbol),
-                           remoteDataManager.parseCountryWeights(etfSymbol),
-                           remoteDataManager.parseSectorWeights(etfSymbol));
+        return remoteDataManager.getEtfObject(etfSymbol);
     }
 
     private void addToLocalDb(EtfData etfObject){
-        localDataManager.addEtfDataToDB(etfObject.getName(),
-                                        etfObject.getDescription(),
-                                        etfObject.getTopTenHoldings(),
-                                        etfObject.getCountryWeights(),
-                                        etfObject.getSectorWeights());
+        localDataManager.addEtfData(etfObject);
     }
 }

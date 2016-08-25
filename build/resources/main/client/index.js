@@ -2,14 +2,15 @@ $(document).ready(function(){
 
     $("#etf_search_form").submit(function(event){
 
+        // Cache fields
         var $form = $(this);
-
-        var getEtfUrl = $form.attr('action');
-        var httpReq = $form.attr('method');
-        var onComplete = //Insert charts
+        var request;
+        var $inputs = $form.find("input");
+        var etf_input = document.forms['etf_search_form']['etf'].value;
+        console.log("Etf input: ", etf_input);
 
         // Check for blank form
-        if (task_input == null || task_input == ""){
+        if (etf_input == null || etf_input == ""){
             alert("Please enter an ETF");
             return false;
         }
@@ -18,28 +19,33 @@ $(document).ready(function(){
         event.preventDefault();
 
         // Aborts any pending requests
-        var request;
         if (request) {
             request.abort();
         }
-        // Selects and caches input field
-        var $inputs = $form.find("input");
 
         // Briefly disables input fields during duration of AJAX request
         $inputs.prop("disabled", true);
 
-        // AJAX request for POSTING new task
-        ajaxCall(getEtf, httpReq, taskToPost, doneLogic, 'undefined', alwaysLogic);
+        // AJAX request info
+        var action = $form.attr('action') + etf_input;
+        var method = $form.attr('method');
+        var data = 'undefined';
+        //var onComplete = //Insert charts;
+        var onFail = 'undefined';
+        var onAlways = $inputs.prop("disabled", false);
 
-        //Reenable input fields
-        $inputs.prop("disabled", false);
+        console.log("Action: ", action);
+        console.log("Method: ", method);
+
+        // AJAX request for GETTING etf data
+        ajaxCall(action, method, data, onComplete, onFail, onAlways);
     });
 
-    function ajaxCall(_url, _type, _data, doneHelperFunction, failHelpFunction, alwaysHelperFunction){
+    function ajaxCall(action, method, data, doneHelperFunction, failHelpFunction, alwaysHelperFunction){
         $.ajax({
-            url: _url,
-            type: _type,
-            data: _data
+            url: action,
+            type: method,
+            data: data
         }).done(function(response, textStatus, jqXHR){
             if (typeof(doneHelperFunction) != 'undefined'){
                 doneHelperFunction(response);
@@ -60,5 +66,5 @@ $(document).ready(function(){
                 alwaysHelperFunction();
             }
         });
-    });
+    };
 });

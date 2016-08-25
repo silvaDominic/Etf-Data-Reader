@@ -28,13 +28,12 @@ public class LocalDataManager {
 
     public LocalDataManager() {}
 
-    public void addEtfDataToDB(String etfName, String description, ArrayList<Holding> holdings,
-                               ArrayList<CountryWeight> countryWeights, ArrayList<SectorWeight> sectorWeights) {
+    public void addEtfData(EtfData etfObject) {
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
             if (conn != null) {
                 PreparedStatement statement = conn.prepareStatement(INSERT_BASE_ETF_DATA);
-                statement.setString(1, etfName);
-                statement.setString(2, description);
+                statement.setString(1, etfObject.getName());
+                statement.setString(2, etfObject.getDescription());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -44,8 +43,8 @@ public class LocalDataManager {
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
             if (conn != null) {
                 PreparedStatement statement = conn.prepareStatement(INSERT_TOPTEN_HOLDINGS);
-                for (Holding holding : holdings) {
-                    statement.setString(1, etfName);
+                for (Holding holding : etfObject.getTopTenHoldings()) {
+                    statement.setString(1, etfObject.getName());
                     statement.setString(2, holding.getCompany());
                     statement.setDouble(3, holding.getWeight());
                     statement.setInt(4, holding.getSharesHeld());
@@ -59,8 +58,8 @@ public class LocalDataManager {
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
             if (conn != null) {
                 PreparedStatement statement = conn.prepareStatement(INSERT_COUNTRY_WEIGHTS);
-                for (CountryWeight countryWeight : countryWeights){
-                    statement.setString(1, etfName);
+                for (CountryWeight countryWeight : etfObject.getCountryWeights()){
+                    statement.setString(1, etfObject.getName());
                     statement.setString(2, countryWeight.getCountry());
                     statement.setDouble(3, countryWeight.getWeight());
                     statement.executeUpdate();
@@ -73,8 +72,8 @@ public class LocalDataManager {
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
             if (conn != null) {
                 PreparedStatement statement = conn.prepareStatement(INSERT_SECTOR_WEIGHTS);
-                for (SectorWeight sectorWeight : sectorWeights){
-                    statement.setString(1, etfName);
+                for (SectorWeight sectorWeight : etfObject.getSectorWeights()){
+                    statement.setString(1, etfObject.getName());
                     statement.setString(2, sectorWeight.getSector());
                     statement.setDouble(3, sectorWeight.getWeight());
                     statement.executeUpdate();
