@@ -1,13 +1,9 @@
 package Controllers;
 
 
-import Model.DataManager;
-import Model.EtfData;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
+import Model.*;
+import Model.Entities.EtfData;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by reclaimer on 8/22/16.
@@ -15,22 +11,14 @@ import java.util.ArrayList;
 @RestController
 public class DataController {
 
-    private String Url;
-    private DataManager dataManager;
+    private EtfDataManager etfDataManager;
 
-    public DataController(String Url){
-        this.Url = Url;
-        dataManager = new DataManager(Url);
+    public DataController(){
+        this.etfDataManager = new EtfDataManager();
     }
 
-    @RequestMapping("/ETF")
-    public ArrayList<EtfData> getAllEtfs(){
-        return new ArrayList<EtfData>(dataManager.getAllEtfs());
-    }
-
-    @RequestMapping("/ETF/{ticker}")
+    @RequestMapping(value="/ETF/{ticker}", method=RequestMethod.GET)
     public EtfData getEtf(@PathVariable String ticker) {
-        return new EtfData(ticker, dataManager.getEtfDescription(), dataManager.getTopTenHoldings(),
-                           dataManager.getCountryWeights(), dataManager.getSectorWeights());
+        return etfDataManager.getEtfData(ticker);
     }
 }

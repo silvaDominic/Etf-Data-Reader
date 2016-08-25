@@ -1,4 +1,4 @@
-package Model;
+package Model.Entities;
 
 /**
  * Created by reclaimer on 8/22/16.
@@ -6,9 +6,9 @@ package Model;
 public class SectorWeight {
 
     private String sector;
-    private String weight;
+    private double weight;
 
-    public SectorWeight(String sector, String weight) {
+    public SectorWeight(String sector, double weight) {
         this.sector = sector;
         this.weight = weight;
     }
@@ -17,7 +17,7 @@ public class SectorWeight {
         return this.sector;
     }
 
-    public String getWeight() {
+    public double getWeight() {
         return this.weight;
     }
 }

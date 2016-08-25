@@ -1,27 +1,27 @@
 package App;
 
 import Controllers.DataController;
+import Model.LocalDataManager;
 import Utils.CsvUtil;
-import Model.HtmlParser;
+import Model.RemoteDataManager;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * Created by reclaimer on 8/19/16.
  */
+@EnableAutoConfiguration
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) throws Throwable {
         //SpringApplication.run(App.Main.class, args);
-        String Url = "https://www.spdrs.com/product/fund.seam?ticker=";
-        new DataController(Url);
-
-        // Test
-        HtmlParser htmlParser = new HtmlParser(Url + "ACIM");
-        CsvUtil.createCsv(htmlParser.parseTopTenHoldings(), htmlParser.parseCountryWeights(), null);
+        new DataController();
     }
 }
 
+
 //TODO Finish implementing Csv Util class
 //TODO Create html file for Fund Sector Allocation and implement parse method
-//TODO Consult yousuf about structure of project (Url, SqlManager, DataManager)
+//TODO Consult yousuf about structure of project (Url, LocalDataManager, DataManager)
 //TODO Add data to DB

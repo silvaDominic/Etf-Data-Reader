@@ -1,32 +1,35 @@
 package Model;
 
+import Model.Entities.CountryWeight;
+import Model.Entities.Holding;
+import Model.Entities.SectorWeight;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
  * Created by reclaimer on 8/21/16.
  */
-public class HtmlParser {
+public class RemoteDataManager {
 
-    private String Url;
+    private static final String baseUrl = "https://www.spdrs.com/product/fund.seam?ticker=";
     private static final String TOP_HOLDINGS = "#FUND_TOP_HOLDINGS";
     private static final String FUND_COUNTRY_WEIGHTS = "#FUND_COUNTRY_WEIGHTS";
     private static final String FUND_SECTOR = "#FUND_SECTOR";
-    private static final String OBJECTIVE = ".overview";
+    private static final String DESCRIPTION = ".overview";
 
-    public HtmlParser(String Url){
-        this.Url = Url;
-    }
+    public RemoteDataManager(){}
 
-    public ArrayList<Holding> parseTopTenHoldings(){
+    public ArrayList<Holding> parseTopTenHoldings(String etfSymbol){
+        String url = baseUrl + etfSymbol;
         ArrayList<Holding> holdings = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(Url).timeout(8000).get();
+            Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements topHoldings = doc.select(TOP_HOLDINGS);
 
             for(Element e : topHoldings.select("table").select("tr")){
@@ -35,7 +38,7 @@ public class HtmlParser {
                     String companyName = list.get(0).text();
                     String weight = list.get(1).text();
                     String sharedHeld = list.get(2).text();
-                    holdings.add(new Holding(companyName, weight, sharedHeld));
+                    holdings.add(new Holding(companyName, Double.parseDouble(weight), Integer.parseInt(sharedHeld)));
                 }
             }
         } catch (IOException e) {
@@ -44,10 +47,11 @@ public class HtmlParser {
         return holdings;
     }
 
-    public ArrayList<CountryWeight> parseCountryWeights(){
+    public ArrayList<CountryWeight> parseCountryWeights(String etfSymbol){
+        String url = baseUrl + etfSymbol;
         ArrayList<CountryWeight> ctryWeights = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(Url).timeout(8000).get();
+            Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements countryWeights = doc.select(FUND_COUNTRY_WEIGHTS);
 
                 for(Element e : countryWeights.select("table").select("tr")){
@@ -55,7 +59,7 @@ public class HtmlParser {
                         ArrayList<Element> list = e.select("td");
                         String countryName = list.get(0).text();
                         String weight = list.get(1).text();
-                        ctryWeights.add(new CountryWeight(countryName, weight));
+                        ctryWeights.add(new CountryWeight(countryName, Double.parseDouble(weight)));
                     }
                 }
         } catch (IOException e) {
@@ -65,10 +69,11 @@ public class HtmlParser {
     }
 
     //TODO Finish implementing sample case
-    public ArrayList<SectorWeight> parseSectorWeights(){
+    public ArrayList<SectorWeight> parseSectorWeights(String etfSymbol){
+        String url = baseUrl + etfSymbol;
         ArrayList<SectorWeight> sectWeights = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(Url).timeout(8000).get();
+            Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements sectorWeights = doc.select(FUND_SECTOR);
 
             for(Element e : sectorWeights.select("div.chart_legend").select("tr")){
@@ -76,7 +81,7 @@ public class HtmlParser {
                     ArrayList<Element> list = e.select("td");
                     String sector = list.get(1).text();
                     String weight = list.get(1).text();
-                    sectWeights.add(new SectorWeight(sector, weight));
+                    sectWeights.add(new SectorWeight(sector, Double.parseDouble(weight)));
                 }
                 System.out.println(e.text());
             }
@@ -86,11 +91,12 @@ public class HtmlParser {
         return sectWeights;
     }
 
-    public String parseDescription(){
+    public String parseDescription(String etfSymbol){
+        String url = baseUrl + etfSymbol;
         String descriptionText = "";
         try {
-            Document doc = Jsoup.connect("https://www.spdrs.com/product/fund.seam?ticker=ACIM").timeout(8000).get();
-            Elements sectorWeights = doc.select(OBJECTIVE);
+            Document doc = Jsoup.connect(url).timeout(10000).get();
+            Elements sectorWeights = doc.select(DESCRIPTION);
 
             Element descriptionElem = sectorWeights.select(".objective").select("p").first();
             descriptionText =  descriptionElem.text();

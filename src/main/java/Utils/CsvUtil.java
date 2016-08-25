@@ -1,8 +1,8 @@
 package Utils;
 
-import Model.CountryWeight;
-import Model.Holding;
-import Model.SectorWeight;
+import Model.Entities.CountryWeight;
+import Model.Entities.Holding;
+import Model.Entities.SectorWeight;
 
 import java.io.*;
 import java.util.ArrayList;

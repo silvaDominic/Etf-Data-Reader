@@ -1,4 +1,4 @@
-package Model;
+package Model.Entities;
 
 /**
  * Created by reclaimer on 8/22/16.
@@ -6,9 +6,9 @@ package Model;
 public class CountryWeight {
 
     private String country;
-    private String weight;
+    private double weight;
 
-    public CountryWeight(String country, String weight) {
+    public CountryWeight(String country, double weight) {
         this.country = country;
         this.weight = weight;
     }
@@ -17,7 +17,7 @@ public class CountryWeight {
         return this.country;
     }
 
-    public String getWeight() {
+    public double getWeight() {
         return this.weight;
     }
 }

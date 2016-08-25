@@ -1,2 +1,3 @@
-# Simple-Web-Scraper
-A web scraper that parses html from a particular page, stores it on a database, and returns the parses info to the client as charts and tables
+# Etf-Data-Reader
+
+The Etf Data Reader application is used to return relevant information, in the form of text, graphs, and tables, based on an ETF (Exchange Traded Funds) symbol that a user has requested.

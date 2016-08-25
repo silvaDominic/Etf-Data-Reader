@@ -1,4 +1,4 @@
-package Model;
+package Model.Entities;
 
 /**
  * Created by reclaimer on 8/22/16.
@@ -6,26 +6,24 @@ package Model;
 public class Holding {
 
     private String company;
-    private String weight;
-    private String sharesHeld;
+    private double weight;
+    private int sharesHeld;
 
-    public Holding(String company, String weight, String sharesHeld){
+    public Holding(String company, double weight, int sharesHeld){
         this.company = company;
         this.weight = weight;
         this.sharesHeld = sharesHeld;
     }
 
-    public Holding(){}
-
     public String getCompany() {
         return this.company;
     }
 
-    public String getWeight() {
+    public double getWeight() {
         return this.weight;
     }
 
-    public String getSharesHeld() {
+    public int getSharesHeld() {
         return this.sharesHeld;
     }
 }
