@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Etf-Data-Reader</title>
+        <script src = "https://code.jquery.com/jquery-2.2.3.min.js"></script>
+        <script type = "text/javascript" src = "index.js"></script>
+    </head>
+    <body>
+        <form id = "etf_search_form" action = "/ETF" method = "GET" accept-charset = "utf-8"
+              enctype="application/x-www-form-urlencoded" autocomplete="off" name = etf_form novalidate>
+            <label> Search for ETF: <input type="text" name="etf_search" maxlength="4" size="4"></label>
+            <input type="submit" value="Search">
+        </form>
+    </body>
+</html>
