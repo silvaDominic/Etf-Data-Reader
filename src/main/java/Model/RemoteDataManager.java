@@ -26,10 +26,16 @@ public class RemoteDataManager {
 
     public RemoteDataManager(){}
 
+    /**
+     * Parses Top Ten Holdings table data from a website
+     * @param etfSymbol The ETF that data will be parsed on
+     * @return An array list of Holding objects
+     */
     public ArrayList<Holding> parseTopTenHoldings(String etfSymbol){
         String url = baseUrl + etfSymbol;
-        ArrayList<Holding> holdings = new ArrayList<>();
+        ArrayList<Holding> holdings = new ArrayList<>(); // Instantiation of ArrayList
         try {
+            // Timeout is extended to accommodate for lengthy parses
             Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements topHoldings = doc.select(TOP_HOLDINGS);
 
@@ -48,10 +54,16 @@ public class RemoteDataManager {
         return holdings;
     }
 
+    /**
+     * Parses all country weight table data from a website
+     * @param etfSymbol The ETF that data will be parsed on
+     * @return An array list of CountryWeight objects
+     */
     public ArrayList<CountryWeight> parseCountryWeights(String etfSymbol){
         String url = baseUrl + etfSymbol;
         ArrayList<CountryWeight> ctryWeights = new ArrayList<>();
         try {
+            // Timeout is extended to accommodate for lengthy parses
             Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements countryWeights = doc.select(FUND_COUNTRY_WEIGHTS);
 
@@ -70,10 +82,17 @@ public class RemoteDataManager {
     }
 
     //TODO Finish implementing sample case
+
+    /**
+     * Parses all sector weight table data from a website
+     * @param etfSymbol The ETF that data will be parsed on
+     * @return An array list of SectorWeight objects
+     */
     public ArrayList<SectorWeight> parseSectorWeights(String etfSymbol){
         String url = baseUrl + etfSymbol;
         ArrayList<SectorWeight> sectWeights = new ArrayList<>();
         try {
+            // Timeout is extended to accommodate for lengthy parses
             Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements sectorWeights = doc.select(FUND_SECTOR);
 
@@ -92,10 +111,16 @@ public class RemoteDataManager {
         return sectWeights;
     }
 
+    /**
+     * Parse the ETF description from a website
+     * @param etfSymbol The ETF that data will be parsed on
+     * @return A string representing the ETF description
+     */
     public String parseDescription(String etfSymbol){
         String url = baseUrl + etfSymbol;
         String descriptionText = "";
         try {
+            // Timeout is extended to accommodate for lengthy parses
             Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements sectorWeights = doc.select(DESCRIPTION);
 
@@ -108,6 +133,11 @@ public class RemoteDataManager {
         return descriptionText;
     }
 
+    /**
+     * Creates and returns an EtfData object from parsed data gathered from a website
+     * @param etfSymbol
+     * @return an EtfData object
+     */
     public EtfData getEtfObject(String etfSymbol){
         return new EtfData(etfSymbol,
                            parseDescription(etfSymbol),

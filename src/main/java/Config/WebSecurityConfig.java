@@ -17,11 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
+    /**
+     * Configures security privileges for particular paths
+     * @param http An HttpSecurity object that allows for configuring web based security for particular http requests
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/home").permitAll()
+                    .antMatchers("/", "/index").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -32,6 +37,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .permitAll();
     }
 
+    /**
+     * Configures a default username and password for a pseudo user that is stored in memory
+     * @param auth Used to create an Authentication Manager
+     * @throws Exception
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth

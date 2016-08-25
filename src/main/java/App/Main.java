@@ -13,6 +13,11 @@ import org.springframework.context.annotation.ComponentScan;
 /**
  * Created by reclaimer on 8/19/16.
  */
+
+/**
+ * Runs Spring Boot Starter Security based app and instantiates DataController
+ * A Component Scan is run on the relevant packages
+ */
 @EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan(basePackages = {"Config", "Controllers", "Model"})
