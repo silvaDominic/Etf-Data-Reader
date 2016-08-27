@@ -30,7 +30,7 @@ targetCompatibility = 1.8
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile 'mysql:mysql-connector-java:5.1.34'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.39'
     compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.2.RELEASE'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
     testCompile("junit:junit")

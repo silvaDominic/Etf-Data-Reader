@@ -10,7 +10,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
@@ -43,8 +42,8 @@ public class RemoteDataManager {
                 if (!e.select("td").isEmpty()) {
                     ArrayList<Element> list = e.select("td");
                     String companyName = list.get(0).text();
-                    String weight = list.get(1).text();
-                    String sharedHeld = list.get(2).text();
+                    String weight = removeSymbols(list.get(1).text());
+                    String sharedHeld = removeSymbols(list.get(2).text());
                     holdings.add(new Holding(companyName, Double.parseDouble(weight), Integer.parseInt(sharedHeld)));
                 }
             }
@@ -52,6 +51,16 @@ public class RemoteDataManager {
             System.out.println("Error" + e);
         }
         return holdings;
+    }
+
+    private String removeSymbols(String data){
+        String result = "";
+        String delim = "[%,]+";
+        String[] parsedData = data.split(delim);
+        for (String d : parsedData){
+            result = d;
+        }
+        return result;
     }
 
     /**
@@ -71,7 +80,7 @@ public class RemoteDataManager {
                     if (!e.select("td").isEmpty()) {
                         ArrayList<Element> list = e.select("td");
                         String countryName = list.get(0).text();
-                        String weight = list.get(1).text();
+                        String weight = removeSymbols(list.get(1).text());
                         ctryWeights.add(new CountryWeight(countryName, Double.parseDouble(weight)));
                     }
                 }
@@ -100,7 +109,7 @@ public class RemoteDataManager {
                 if (!e.select("td").isEmpty()) {
                     ArrayList<Element> list = e.select("td");
                     String sector = list.get(1).text();
-                    String weight = list.get(1).text();
+                    String weight = removeSymbols(list.get(1).text());
                     sectWeights.add(new SectorWeight(sector, Double.parseDouble(weight)));
                 }
                 System.out.println(e.text());

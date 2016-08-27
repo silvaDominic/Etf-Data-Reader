@@ -17,19 +17,20 @@ public class LocalDataManager {
 
     private static final String DBURL = "jdbc:mysql://localhost:3306/ETF_DB?autoReconnect=true&useSSL=false";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "roo7CLAUD1tis8";
 
-    //TODO Can SELECT_ALL_ETF_DATA be shortened?
-    private static final String SELECT_ALL_ETF_DATA = "SELECT basic_etf_data*, top_ten_holdings*, country_weights*, sector_weights* FROM basic_etf_data JOIN top_ten_holdings ON top_ten_holdings.etf_ref = basic_etf_data.etf_name JOIN country_weights ON country_weights.etf_ref = top_ten_holdings.etf_ref JOIN sector_weights ON sector_weights.etf_ref = basic_etf_data.etf_name WHERE basic_etf_data.etf_name = (?)";
-    private static final String INSERT_BASE_ETF_DATA = "INSERT INTO basic_etf_data (etf_name, description)";
-    private static final String INSERT_TOPTEN_HOLDINGS = "INSERT INTO top_ten_holdings (etf_ref, company, weight, shares)";
-    private static final String INSERT_COUNTRY_WEIGHTS = "INSERT INTO country_weights (etf_ref, country_name, country_weight)";
-    private static final String INSERT_SECTOR_WEIGHTS = "INSERT INTO sector_weights (etf_ref, sector_name, sector_weight)";
-    private static final String CHECK_FOR_DATA = "SELECT EXISTS(SELECT * FROM basic_etf_data WHERE etf_name = (?)";
+    //TODO Fix Select All statement
+    private static final String SELECT_ALL_ETF_DATA = "SELECT * FROM basic_etf_data JOIN top_ten_holdings ON top_ten_holdings.etf_ref = basic_etf_data.etf_name JOIN country_weights ON country_weights.etf_ref = top_ten_holdings.etf_ref JOIN sector_weights ON sector_weights.etf_ref = basic_etf_data.etf_name WHERE basic_etf_data.etf_name = (?)";
+    private static final String INSERT_BASE_ETF_DATA = "INSERT INTO basic_etf_data (etf_name, description) VALUES (?, ?)";
+    private static final String INSERT_TOPTEN_HOLDINGS = "INSERT INTO top_ten_holdings (etf_ref, company, weight, shares) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_COUNTRY_WEIGHTS = "INSERT INTO country_weights (etf_ref, country_name, country_weight) VALUES (?, ?, ?)";
+    private static final String INSERT_SECTOR_WEIGHTS = "INSERT INTO sector_weights (etf_ref, sector_name, sector_weight) VALUES (?, ?, ?)";
+    private static final String CHECK_FOR_DATA = "SELECT COUNT(*) FROM basic_etf_data WHERE etf_name = (?)";
 
     public LocalDataManager() {}
 
     //TODO Break addEtfData method up
+    //TODO Figure out why only basic_etf_data being added to database
     /**
      * Inserts data from an EtfData object into a database.
      * Multiple connections are required to accommodate for the multiple tables that data is inserted into.
@@ -44,6 +45,7 @@ public class LocalDataManager {
                 statement.setString(1, etfObject.getName());
                 statement.setString(2, etfObject.getDescription());
                 statement.executeUpdate();
+                System.out.println("Successfully added Basic Etf data to database");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,6 +61,7 @@ public class LocalDataManager {
                     statement.setDouble(3, holding.getWeight());
                     statement.setInt(4, holding.getSharesHeld());
                     statement.executeUpdate();
+                    System.out.println("Successfully added Top Ten Holdings data to data base");
                 }
             }
         } catch (SQLException e) {
@@ -74,6 +77,7 @@ public class LocalDataManager {
                     statement.setString(2, countryWeight.getCountry());
                     statement.setDouble(3, countryWeight.getWeight());
                     statement.executeUpdate();
+                    System.out.println("Successfully added Country Weights data to database");
                 }
             }
         } catch (SQLException e) {
@@ -89,6 +93,7 @@ public class LocalDataManager {
                     statement.setString(2, sectorWeight.getSector());
                     statement.setDouble(3, sectorWeight.getWeight());
                     statement.executeUpdate();
+                    System.out.println("Successfully added Sector Weights data to database");
                 }
             }
         } catch (SQLException e) {
@@ -130,6 +135,7 @@ public class LocalDataManager {
                 statement.setString(1, etfSymbol);
                 ResultSet result = statement.executeQuery();
                 if (result.next()){
+                    System.out.println("No data currently in database for this ETF");
                     return true;
                 }
             }
