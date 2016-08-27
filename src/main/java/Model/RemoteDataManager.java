@@ -53,16 +53,6 @@ public class RemoteDataManager {
         return holdings;
     }
 
-    private String removeSymbols(String data){
-        String result = "";
-        String delim = "[%,]+";
-        String[] parsedData = data.split(delim);
-        for (String d : parsedData){
-            result = d;
-        }
-        return result;
-    }
-
     /**
      * Parses all country weight table data from a website
      * @param etfSymbol The ETF that data will be parsed on
@@ -153,5 +143,18 @@ public class RemoteDataManager {
                            parseTopTenHoldings(etfSymbol),
                            parseCountryWeights(etfSymbol),
                            parseSectorWeights(etfSymbol));
+    }
+
+    /**
+     * Removes percentage and commas from weights and shares values respectively
+     * @param data The values to be parsed
+     * @return The parsed string
+     */
+    private String removeSymbols(String data){
+        String result = "";
+        String delim = "[%,]+";
+        String[] parsedData = data.split(delim);
+        for (String d : parsedData){result = d;}
+        return result;
     }
 }

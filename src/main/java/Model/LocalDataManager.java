@@ -20,12 +20,15 @@ public class LocalDataManager {
     private static final String PASSWORD = "roo7CLAUD1tis8";
 
     //TODO Fix Select All statement
-    private static final String SELECT_ALL_ETF_DATA = "SELECT * FROM basic_etf_data JOIN top_ten_holdings ON top_ten_holdings.etf_ref = basic_etf_data.etf_name JOIN country_weights ON country_weights.etf_ref = top_ten_holdings.etf_ref JOIN sector_weights ON sector_weights.etf_ref = basic_etf_data.etf_name WHERE basic_etf_data.etf_name = (?)";
+    private static final String CHECK_FOR_DATA = "SELECT * FROM basic_etf_data WHERE etf_name = (?) LIMIT 1";
     private static final String INSERT_BASE_ETF_DATA = "INSERT INTO basic_etf_data (etf_name, description) VALUES (?, ?)";
     private static final String INSERT_TOPTEN_HOLDINGS = "INSERT INTO top_ten_holdings (etf_ref, company, weight, shares) VALUES (?, ?, ?, ?)";
     private static final String INSERT_COUNTRY_WEIGHTS = "INSERT INTO country_weights (etf_ref, country_name, country_weight) VALUES (?, ?, ?)";
     private static final String INSERT_SECTOR_WEIGHTS = "INSERT INTO sector_weights (etf_ref, sector_name, sector_weight) VALUES (?, ?, ?)";
-    private static final String CHECK_FOR_DATA = "SELECT COUNT(*) FROM basic_etf_data WHERE etf_name = (?)";
+    private static final String SELECT_BASIC_ETF_DATA = "SELECT * FROM basic_etf_data WHERE etf_name = (?)";
+    private static final String SELECT_TOPTEN_HOLDINGS= "SELECT * FROM top_top_holdings WHERE etf_ref = (?)";
+    private static final String SELECT_COUNTRY_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
+    private static final String SELECT_SECTOR_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
 
     public LocalDataManager() {}
 
@@ -101,6 +104,19 @@ public class LocalDataManager {
         }
     }
 
+    //TODO Fix.
+    private Connection getConnection(){
+        Connection resultConn = null;
+        try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
+            if (conn != null) {
+                resultConn = conn;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultConn;
+    }
+
     //TODO Figure out how to build object properly
     /**
      * Retrieves a ETF data from the database and constructs a new EtfData object
@@ -114,7 +130,7 @@ public class LocalDataManager {
                 statement.setString(1, etfSymbol);
                 ResultSet etfData = statement.executeQuery();
                 etfData.next();
-                System.out.println(etfData);
+                System.out.println("Etf Data: " + etfData);
                 //return new EtfData(etfData.getString(1), etfData.getString(2), etfData.get)
             }
         } catch (SQLException e) {
@@ -134,14 +150,16 @@ public class LocalDataManager {
                 PreparedStatement statement = conn.prepareStatement(CHECK_FOR_DATA);
                 statement.setString(1, etfSymbol);
                 ResultSet result = statement.executeQuery();
-                if (result.next()){
+                if (!result.isBeforeFirst()){
                     System.out.println("No data currently in database for this ETF");
-                    return true;
+                    return false;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        System.out.println("Data already exists in database for this ETF");
+        return true;
     }
 }
+

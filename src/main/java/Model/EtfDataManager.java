@@ -25,6 +25,7 @@ public class EtfDataManager {
      * @return An EtdData object
      */
     public EtfData getEtfData(String etfSymbol){
+        System.out.println(etfExistsLocally("Check: " + etfSymbol));
         if(!etfExistsLocally(etfSymbol)){
             EtfData etfObject = fetchRemotely(etfSymbol);
             addToLocalDb(etfObject);
