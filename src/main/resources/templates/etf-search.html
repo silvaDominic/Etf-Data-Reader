@@ -11,9 +11,9 @@
 <body>
     <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
 
-    <form id="etf_search_form" action="/ETF/" novalidate="true" method="GET" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" autocomplete="off" name="etf_search_form">
+    <form id="etf_search_form" action="/ETF/" novalidate="true" method="GET" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" autocomplete="off" symbol="etf_search_form">
         <label> Search for ETF: </label>
-        <input type="text" name="etf" maxlength="4" size="4"/>
+        <input type="text" symbol="etf" maxlength="4" size="4"/>
         <input type="submit" value="Search"/>
     </form>
 

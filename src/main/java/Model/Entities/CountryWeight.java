@@ -1,8 +1,5 @@
 package Model.Entities;
 
-/**
- * Created by reclaimer on 8/22/16.
- */
 public class CountryWeight {
 
     private String country;

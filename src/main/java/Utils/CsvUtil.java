@@ -7,11 +7,11 @@ import Model.Entities.SectorWeight;
 import java.io.*;
 import java.util.ArrayList;
 
-/**
- * Created by reclaimer on 8/22/16.
- */
+//TODO Figure out how files are built and downloaded with a server side ref.
 public class CsvUtil {
 
+    //TODO Don't think I should be creating a local file
+    //TODO I think I just need to pass the append methods the file; How should the writer object refer to a nameless file?
     /**
      * Creates a CSV file of relevant ETF data.
      * A file is first created to allow for appending only data that exists.
@@ -19,13 +19,14 @@ public class CsvUtil {
      * @param countryWeights An array list of Country Weight objects
      * @param sectorWeights An array list of Sector Weight objects
      */
-    public static void createCsv(ArrayList<Holding> holdings, ArrayList<CountryWeight> countryWeights, ArrayList<SectorWeight> sectorWeights) {
+    public static File createCsv(ArrayList<Holding> holdings, ArrayList<CountryWeight> countryWeights, ArrayList<SectorWeight> sectorWeights) {
         String fileName = "etf-csv.txt";
-        new File(fileName);
+        File csvFile = new File(fileName);
         // If data exists add it to the CSV file
         if(holdings != null){AppendTopTenHoldings(fileName, holdings);}
         if(countryWeights != null){AppendCountryWeights(fileName, countryWeights);}
         if (sectorWeights != null){AppendSectorWeights(fileName, sectorWeights);}
+        return csvFile;
     }
 
     /**

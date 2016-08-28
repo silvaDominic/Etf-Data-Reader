@@ -2,10 +2,6 @@ package Model;
 
 import Model.Entities.EtfData;
 
-/**
- *
- */
-
 public class EtfDataManager {
 
     private RemoteDataManager remoteDataManager;

@@ -2,21 +2,27 @@ package Model.Entities;
 
 import java.util.ArrayList;
 
-/**
- * Created by reclaimer on 8/23/16.
- */
 public class EtfData {
 
-    private String name;
+    private String symbol;
     private String description;
+    private BasicEtfData basicEtfData;
     private ArrayList<Holding> topTenHoldings;
     private ArrayList<CountryWeight> countryWeights;
     private ArrayList<SectorWeight> sectorWeights;
 
-    public EtfData(String name, String description, ArrayList<Holding> topTenHoldings,
+    public EtfData(String symbol, String description, ArrayList<Holding> topTenHoldings,
                    ArrayList<CountryWeight> countryWeights, ArrayList<SectorWeight> sectorWeights) {
-        this.name = name;
+        this.symbol = symbol;
         this.description = description;
+        this.topTenHoldings = topTenHoldings;
+        this.countryWeights = countryWeights;
+        this.sectorWeights = sectorWeights;
+    }
+
+    public EtfData(BasicEtfData basicEtfData, ArrayList<Holding> topTenHoldings,
+                   ArrayList<CountryWeight> countryWeights, ArrayList<SectorWeight> sectorWeights) {
+        this.basicEtfData = basicEtfData;
         this.topTenHoldings = topTenHoldings;
         this.countryWeights = countryWeights;
         this.sectorWeights = sectorWeights;
@@ -30,8 +36,8 @@ public class EtfData {
         return sectorWeights;
     }
 
-    public String getName() {
-        return name;
+    public String getSymbol() {
+        return symbol;
     }
 
     public String getDescription() {
