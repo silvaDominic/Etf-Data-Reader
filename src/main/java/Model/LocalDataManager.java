@@ -21,7 +21,7 @@ public class LocalDataManager {
     private static final String INSERT_SECTOR_WEIGHTS = "INSERT INTO sector_weights (etf_ref, sector_name, sector_weight) VALUES (?, ?, ?)";
     private static final String SELECT_BASIC_ETF_DATA = "SELECT * FROM basic_etf_data WHERE etf_symbol = (?)";
     private static final String SELECT_TOPTEN_HOLDINGS= "SELECT * FROM top_ten_holdings WHERE etf_ref = (?)";
-    private static final String SELECT_COUNTRY_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
+    private static final String SELECT_COUNTRY_WEIGHTS = "SELECT * FROM country_weights WHERE etf_ref = (?)";
     private static final String SELECT_SECTOR_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
 
     public LocalDataManager() {}
@@ -46,10 +46,11 @@ public class LocalDataManager {
      * @return A EtfData object
      */
     public EtfData getEtfData(String etfSymbol){
-        return new EtfData(fetchBasicEtfData(etfSymbol),
+        EtfData etfObject = new EtfData(fetchBasicEtfData(etfSymbol),
                            fetchTopTenHoldingData(etfSymbol),
                            fetchCountryWeightData(etfSymbol),
                            fetchSectorWeightData(etfSymbol));
+        return etfObject;
     }
 
     /**
@@ -151,7 +152,6 @@ public class LocalDataManager {
                     basicEtfData = new BasicEtfData(result.getString(1), result.getString(2));
                 }
                 System.out.println("Successfully FETCHED Basic ETF Data from database");
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,7 +175,6 @@ public class LocalDataManager {
                     topTenHoldingData.add(new Holding(result.getString(2), result.getDouble(3), result.getInt(4)));
                 }
                 System.out.println("Successfully FETCHED Top Ten Holding data from database");
-
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -3,9 +3,15 @@ package Controllers;
 import Model.CsvManager;
 import Model.Entities.EtfData;
 import Model.EtfDataManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 public class DataController {
@@ -25,9 +31,7 @@ public class DataController {
      */
     @RequestMapping(value="/ETF/{etfSymbol}", method=RequestMethod.GET, produces="application/json")
     public @ResponseBody EtfData getEtf(@PathVariable String etfSymbol) {
+        System.out.println("Inside getEtf");
         return etfDataManager.getEtfData(etfSymbol);
     }
-
-    @RequestMapping(value="ETF/{etfSymbol}/csv", method=RequestMethod.GET)
-    public @ResponseBody File getCsv(@PathVariable String etfSymbol) { return csvManager.getCsv(etfSymbol); }
 }

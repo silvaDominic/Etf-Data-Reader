@@ -2,7 +2,11 @@ package Model;
 
 import Model.Entities.EtfData;
 import Utils.CsvUtil;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 
 /**
@@ -14,7 +18,8 @@ public class CsvManager {
 
     public CsvManager(){};
 
-    public File getCsv(String etfSymbol){
+    //TODO
+    public File getCsv(String etfSymbol, HttpServletResponse response){
         EtfData etfObject = localDataManager.getEtfData(etfSymbol);
         return CsvUtil.createCsv(etfObject.getTopTenHoldings(), etfObject.getCountryWeights(), etfObject.getSectorWeights());
     }

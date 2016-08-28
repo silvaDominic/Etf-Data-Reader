@@ -28,20 +28,24 @@ public class EtfData {
         this.sectorWeights = sectorWeights;
     }
 
-    public ArrayList<CountryWeight> getCountryWeights() {
-        return countryWeights;
-    }
-
-    public ArrayList<SectorWeight> getSectorWeights() {
-        return sectorWeights;
-    }
-
     public String getSymbol() {
         return symbol;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public BasicEtfData getBasicEtfData() {
+        return basicEtfData;
+    }
+
+    public ArrayList<CountryWeight> getCountryWeights() {
+        return countryWeights;
+    }
+
+    public ArrayList<SectorWeight> getSectorWeights() {
+        return sectorWeights;
     }
 
     public ArrayList<Holding> getTopTenHoldings() {

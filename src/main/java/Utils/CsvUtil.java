@@ -12,8 +12,7 @@ import java.util.ArrayList;
 @Component
 public class CsvUtil {
 
-    //TODO Don't think I should be creating a local file
-    //TODO I think I just need to pass the append methods the file; How should the writer object refer to a nameless file?
+    //TODO Implement with CsvDownload Controller logic if possible
     /**
      * Creates a CSV file of relevant ETF data.
      * A file is first created to allow for appending only data that exists.
