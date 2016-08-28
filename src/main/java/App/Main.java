@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @EnableAutoConfiguration
 @SpringBootApplication
-@ComponentScan(basePackages = {"Config", "Controllers", "Model"})
+@ComponentScan(basePackages = {"Config", "Controllers", "Model", "Utils"})
 public class Main {
     public static void main(String[] args) throws Throwable {
         SpringApplication.run(App.Main.class, args);

@@ -3,11 +3,13 @@ package Utils;
 import Model.Entities.CountryWeight;
 import Model.Entities.Holding;
 import Model.Entities.SectorWeight;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 
 //TODO Figure out how files are built and downloaded with a server side ref.
+@Component
 public class CsvUtil {
 
     //TODO Don't think I should be creating a local file

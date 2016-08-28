@@ -30,7 +30,7 @@ $(document).ready(function(){
         var action = $form.attr('action') + etf_input;
         var method = $form.attr('method');
         var data = 'undefined';
-        var onComplete = 'undefined' //Insert charts;
+        var onComplete = 'undefined'; //Insert charts;
         var onFail = 'undefined';
         var onAlways = $inputs.prop("disabled", false);
 

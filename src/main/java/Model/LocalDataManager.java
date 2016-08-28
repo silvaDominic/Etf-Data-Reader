@@ -14,13 +14,13 @@ public class LocalDataManager {
     private static final String PASSWORD = "roo7CLAUD1tis8";
 
     //TODO Fix Select All statement
-    private static final String CHECK_FOR_DATA = "SELECT * FROM basic_etf_data WHERE etf_name = (?) LIMIT 1";
-    private static final String INSERT_BASE_ETF_DATA = "INSERT INTO basic_etf_data (etf_name, description) VALUES (?, ?)";
+    private static final String CHECK_FOR_DATA = "SELECT * FROM basic_etf_data WHERE etf_symbol = (?) LIMIT 1";
+    private static final String INSERT_BASE_ETF_DATA = "INSERT INTO basic_etf_data (etf_symbol, description) VALUES (?, ?)";
     private static final String INSERT_TOPTEN_HOLDINGS = "INSERT INTO top_ten_holdings (etf_ref, company, weight, shares) VALUES (?, ?, ?, ?)";
     private static final String INSERT_COUNTRY_WEIGHTS = "INSERT INTO country_weights (etf_ref, country_name, country_weight) VALUES (?, ?, ?)";
     private static final String INSERT_SECTOR_WEIGHTS = "INSERT INTO sector_weights (etf_ref, sector_name, sector_weight) VALUES (?, ?, ?)";
-    private static final String SELECT_BASIC_ETF_DATA = "SELECT * FROM basic_etf_data WHERE etf_name = (?)";
-    private static final String SELECT_TOPTEN_HOLDINGS= "SELECT * FROM top_top_holdings WHERE etf_ref = (?)";
+    private static final String SELECT_BASIC_ETF_DATA = "SELECT * FROM basic_etf_data WHERE etf_symbol = (?)";
+    private static final String SELECT_TOPTEN_HOLDINGS= "SELECT * FROM top_ten_holdings WHERE etf_ref = (?)";
     private static final String SELECT_COUNTRY_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
     private static final String SELECT_SECTOR_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
 
@@ -47,9 +47,9 @@ public class LocalDataManager {
      */
     public EtfData getEtfData(String etfSymbol){
         return new EtfData(fetchBasicEtfData(etfSymbol),
-                    fetchTopTenHoldingData(etfSymbol),
-                    fetchCountryWeightData(etfSymbol),
-                    fetchSectorWeightData(etfSymbol));
+                           fetchTopTenHoldingData(etfSymbol),
+                           fetchCountryWeightData(etfSymbol),
+                           fetchSectorWeightData(etfSymbol));
     }
 
     /**
@@ -64,7 +64,7 @@ public class LocalDataManager {
                 statement.setString(1, etfObject.getSymbol());
                 statement.setString(2, etfObject.getDescription());
                 statement.executeUpdate();
-                System.out.println("Successfully added Basic Etf data to database");
+                System.out.println("Successfully ADDED Basic Etf Data to database");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class LocalDataManager {
                     statement.setDouble(3, holding.getWeight());
                     statement.setInt(4, holding.getSharesHeld());
                     statement.executeUpdate();
-                    System.out.println("Successfully added Top Ten Holdings data to data base");
+                    System.out.println("Successfully ADDED Top Ten Holdings data to data base");
                 }
             }
         } catch (SQLException e) {
@@ -106,7 +106,7 @@ public class LocalDataManager {
                     statement.setString(2, countryWeight.getCountry());
                     statement.setDouble(3, countryWeight.getWeight());
                     statement.executeUpdate();
-                    System.out.println("Successfully added Country Weights data to database");
+                    System.out.println("Successfully ADDED Country Weights data to database");
                 }
             }
         } catch (SQLException e) {
@@ -127,7 +127,7 @@ public class LocalDataManager {
                     statement.setString(2, sectorWeight.getSector());
                     statement.setDouble(3, sectorWeight.getWeight());
                     statement.executeUpdate();
-                    System.out.println("Successfully added Sector Weights data to database");
+                    System.out.println("Successfully ADDED Sector Weights data to database");
                 }
             }
         } catch (SQLException e) {
@@ -150,7 +150,7 @@ public class LocalDataManager {
                 if(result.next()){
                     basicEtfData = new BasicEtfData(result.getString(1), result.getString(2));
                 }
-                System.out.println("Successfully added Sector Weights data to database");
+                System.out.println("Successfully FETCHED Basic ETF Data from database");
 
             }
         } catch (SQLException e) {
@@ -172,9 +172,9 @@ public class LocalDataManager {
                 statement.setString(1, etfSymbol);
                 ResultSet result = statement.executeQuery();
                 while (result.next()){
-                    topTenHoldingData.add(new Holding(result.getString(1), result.getDouble(2), result.getInt(3)));
+                    topTenHoldingData.add(new Holding(result.getString(2), result.getDouble(3), result.getInt(4)));
                 }
-                System.out.println("Successfully added Sector Weights data to database");
+                System.out.println("Successfully FETCHED Top Ten Holding data from database");
 
             }
         } catch (SQLException e) {
@@ -196,9 +196,9 @@ public class LocalDataManager {
                 statement.setString(1, etfSymbol);
                 ResultSet result = statement.executeQuery();
                 while (result.next()){
-                    countryWeightData.add(new CountryWeight(result.getString(1), result.getDouble(2)));
+                    countryWeightData.add(new CountryWeight(result.getString(2), result.getDouble(3)));
                 }
-                System.out.println("Successfully added Sector Weights data to database");
+                System.out.println("Successfully FETCHED Country Weight data from database");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -219,9 +219,9 @@ public class LocalDataManager {
                 statement.setString(1, etfName);
                 ResultSet result = statement.executeQuery();
                 while(result.next()){
-                    sectorWeights.add(new SectorWeight(result.getString(1), result.getDouble(2)));
+                    sectorWeights.add(new SectorWeight(result.getString(2), result.getDouble(3)));
                 }
-                System.out.println("Successfully added Sector Weights data to database");
+                System.out.println("Successfully FETCHED Sector Weight data from database");
             }
         } catch (SQLException e) {
             e.printStackTrace();
