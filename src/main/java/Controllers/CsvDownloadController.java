@@ -16,21 +16,10 @@ public class CsvDownloadController {
 
     private CsvManager csvManager;
 
-    public CsvDownloadController(){this.csvManager = csvManager;}
+    public CsvDownloadController(){this.csvManager = new CsvManager();}
 
     //TODO Can this logic be moved?
     @RequestMapping(value = "ETF/{etfSymbol}/downloadCsv")
     public void downloadCsv(@PathVariable String etfSymbol, HttpServletResponse response) throws IOException{
-        String fileName = etfSymbol + ".csv";
-        response.setContentType("text/csv");
-
-        //Set headers
-        String headerKey = "Content-Disposition";
-        String headerValue = String.format("attachment; filename=\"%s\" ", fileName);
-        response.setHeader(headerKey, headerValue);
-
-        ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-
-        // write etf data to csv
     }
 }

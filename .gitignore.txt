@@ -1,4 +1,5 @@
-/media/reclaimer/shared/software-development/etf-data-reader/Etf-Data-Reader/gradlew
-/media/reclaimer/shared/software-development/etf-data-reader/Etf-Data-Reader/gradlew.bat
-/media/reclaimer/shared/software-development/etf-data-reader/Etf-Data-Reader/settings.gradle
-/media/reclaimer/shared/software-development/etf-data-reader/Etf-Data-Reader/gradle
+gradlew
+gradlew.bat
+settings.gradle
+gradle/*
+build/*

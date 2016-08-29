@@ -15,16 +15,16 @@ public class LocalDataManager {
 
     //TODO Fix Select All statement
     private static final String CHECK_FOR_DATA = "SELECT * FROM basic_etf_data WHERE etf_symbol = (?) LIMIT 1";
-    private static final String INSERT_BASE_ETF_DATA = "INSERT INTO basic_etf_data (etf_symbol, description) VALUES (?, ?)";
+    private static final String INSERT_BASIC_ETF_DATA = "INSERT INTO basic_etf_data (etf_symbol, description) VALUES (?, ?)";
     private static final String INSERT_TOPTEN_HOLDINGS = "INSERT INTO top_ten_holdings (etf_ref, company, weight, shares) VALUES (?, ?, ?, ?)";
     private static final String INSERT_COUNTRY_WEIGHTS = "INSERT INTO country_weights (etf_ref, country_name, country_weight) VALUES (?, ?, ?)";
     private static final String INSERT_SECTOR_WEIGHTS = "INSERT INTO sector_weights (etf_ref, sector_name, sector_weight) VALUES (?, ?, ?)";
-    private static final String SELECT_BASIC_ETF_DATA = "SELECT * FROM basic_etf_data WHERE etf_symbol = (?)";
+    private static final String SELECT_DESCRIPTION = "SELECT description FROM basic_etf_data WHERE etf_symbol = (?)";
     private static final String SELECT_TOPTEN_HOLDINGS= "SELECT * FROM top_ten_holdings WHERE etf_ref = (?)";
     private static final String SELECT_COUNTRY_WEIGHTS = "SELECT * FROM country_weights WHERE etf_ref = (?)";
     private static final String SELECT_SECTOR_WEIGHTS = "SELECT * FROM sector_weights WHERE etf_ref = (?)";
 
-    public LocalDataManager() {}
+    LocalDataManager() {}
 
     //TODO Break addEtfData method up
     //TODO Figure out why only basic_etf_data being added to database
@@ -33,7 +33,7 @@ public class LocalDataManager {
      * Multiple connections are required to accommodate for the multiple tables that data is inserted into.
      * @param etfObject The EtfData object that is to be inserted into the database.
      */
-    public void addEtfData(EtfData etfObject) {
+    void addEtfData(EtfData etfObject) {
         insertBasicEtfData(etfObject);
         insertTopTenHoldingData(etfObject);
         insertCountryWeightData(etfObject);
@@ -45,12 +45,12 @@ public class LocalDataManager {
      * @param etfSymbol The ETF symbol that data is being requested on.
      * @return A EtfData object
      */
-    public EtfData getEtfData(String etfSymbol){
-        EtfData etfObject = new EtfData(fetchBasicEtfData(etfSymbol),
+    EtfData getEtfData(String etfSymbol){
+        return new EtfData(etfSymbol,
+                           fetchDescription(etfSymbol),
                            fetchTopTenHoldingData(etfSymbol),
                            fetchCountryWeightData(etfSymbol),
                            fetchSectorWeightData(etfSymbol));
-        return etfObject;
     }
 
     /**
@@ -61,7 +61,7 @@ public class LocalDataManager {
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
 
             if (conn != null) {
-                PreparedStatement statement = conn.prepareStatement(INSERT_BASE_ETF_DATA);
+                PreparedStatement statement = conn.prepareStatement(INSERT_BASIC_ETF_DATA);
                 statement.setString(1, etfObject.getSymbol());
                 statement.setString(2, etfObject.getDescription());
                 statement.executeUpdate();
@@ -141,22 +141,22 @@ public class LocalDataManager {
      * @param etfSymbol The EtfData object that is used to fetch basic etf data.
      * @return An EtfData object
      */
-    private BasicEtfData fetchBasicEtfData(String etfSymbol){
-        BasicEtfData basicEtfData = null;
+    private String fetchDescription(String etfSymbol){
+        String description = "";
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
             if (conn != null) {
-                PreparedStatement statement = conn.prepareStatement(SELECT_BASIC_ETF_DATA);
+                PreparedStatement statement = conn.prepareStatement(SELECT_DESCRIPTION);
                 statement.setString(1, etfSymbol);
                 ResultSet result = statement.executeQuery();
                 if(result.next()){
-                    basicEtfData = new BasicEtfData(result.getString(1), result.getString(2));
+                    description = result.getString(1);
                 }
-                System.out.println("Successfully FETCHED Basic ETF Data from database");
+                System.out.println("Successfully FETCHED Description from database");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return basicEtfData;
+        return description;
     }
 
     /**
@@ -234,7 +234,7 @@ public class LocalDataManager {
      * @param etfSymbol The ETF that is being searched for.
      * @return A boolean: True, ETF exists; False, ETF does not exist
      */
-    public boolean checkForData(String etfSymbol){
+    boolean checkForData(String etfSymbol){
         try (Connection conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD)) {
             if (conn != null) {
                 PreparedStatement statement = conn.prepareStatement(CHECK_FOR_DATA);

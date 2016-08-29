@@ -30,9 +30,16 @@ $(document).ready(function(){
         var action = $form.attr('action') + etf_input;
         var method = $form.attr('method');
         var data = 'undefined';
-        var onComplete = 'undefined'; //Insert charts;
+        var onComplete = function(response){
+            var chart = AmCharts.makeChart("chartdiv", {
+                "type" : "serial",
+                "dataLoader" : {
+                "url" : action
+                }
+            });
+        };
         var onFail = 'undefined';
-        var onAlways = $inputs.prop("disabled", false);
+        var onAlways = function() {$inputs.prop("disabled", false);}
 
         console.log("Action: ", action);
         console.log("Method: ", method);
@@ -41,7 +48,7 @@ $(document).ready(function(){
         ajaxCall(action, method, data, onComplete, onFail, onAlways);
     });
 
-    function ajaxCall(action, method, data, doneHelperFunction, failHelpFunction, alwaysHelperFunction){
+    function ajaxCall(action, method, data, doneHelperFunction, failHelperFunction, alwaysHelperFunction){
         $.ajax({
             url: action,
             type: method,
@@ -51,20 +58,27 @@ $(document).ready(function(){
                 doneHelperFunction(response);
             }
             console.log(method + " successful.");
-            console.log("Response: " + response);
-            console.log("Text Status: " + textStatus);
-            console.log("JQ XMLHttpReq: " + jQuery.parseJSON(jqXHR.responseText));
+            console.log("Response: ", response);
+            console.log("Text Status: ", textStatus);
+            console.log("JQ XMLHttpReq: ", jQuery.parseJSON(jqXHR.responseText));
         }).fail(function(jqXHR, textStatus, errorThrown){
             if (typeof(failHelperFunction) != 'undefined'){
                 failHelperFunction(response);
             }
             console.log("Error.");
-            console.log("Text Status: " + textStatus);
-            console.log("JQ XMLHttpReq: " + jQuery.parseJSON(jqXHR.responseText));
+            console.log("Text Status: ", textStatus);
+            console.log("JQ XMLHttpReq: ", jQuery.parseJSON(jqXHR.responseText));
         }).always(function(){
             if (typeof(alwaysHelperFunction) != 'undefined'){
                 alwaysHelperFunction();
             }
         });
-    };
+    }
+
+    function setDataSet(dataset_url){
+        AmCharts.loadFile(dataset_url, {}, function(data) {
+            chart.dataProvider = AmCharts.parseJSON(data);
+            chart.validateData();
+        });
+    }
 });
