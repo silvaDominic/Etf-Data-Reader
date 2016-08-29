@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class RemoteDataManager {
 
-    private static final String baseUrl = "https://www.spdrs.com/product/fund.seam?ticker=";
+    private static final String BASE_URL = "https://www.spdrs.com/product/fund.seam?ticker=";
     private static final String TOP_HOLDINGS = "#FUND_TOP_HOLDINGS";
     private static final String FUND_COUNTRY_WEIGHTS = "#FUND_COUNTRY_WEIGHTS";
     private static final String FUND_SECTOR = "#FUND_SECTOR";
@@ -28,7 +28,7 @@ public class RemoteDataManager {
      * @return An array list of Holding objects
      */
     public ArrayList<Holding> parseTopTenHoldings(String etfSymbol){
-        String url = baseUrl + etfSymbol;
+        String url = BASE_URL + etfSymbol;
         ArrayList<Holding> holdings = new ArrayList<>(); // Instantiation of ArrayList
         try {
             // Timeout is extended to accommodate for lengthy parses
@@ -56,7 +56,7 @@ public class RemoteDataManager {
      * @return An array list of CountryWeight objects
      */
     public ArrayList<CountryWeight> parseCountryWeights(String etfSymbol){
-        String url = baseUrl + etfSymbol;
+        String url = BASE_URL + etfSymbol;
         ArrayList<CountryWeight> ctryWeights = new ArrayList<>();
         try {
             // Timeout is extended to accommodate for lengthy parses
@@ -85,7 +85,7 @@ public class RemoteDataManager {
      * @return An array list of SectorWeight objects
      */
     public ArrayList<SectorWeight> parseSectorWeights(String etfSymbol){
-        String url = baseUrl + etfSymbol;
+        String url = BASE_URL + etfSymbol;
         ArrayList<SectorWeight> sectWeights = new ArrayList<>();
         try {
             // Timeout is extended to accommodate for lengthy parses
@@ -113,7 +113,7 @@ public class RemoteDataManager {
      * @return A string representing the ETF description
      */
     public String parseDescription(String etfSymbol){
-        String url = baseUrl + etfSymbol;
+        String url = BASE_URL + etfSymbol;
         String descriptionText = "";
         try {
             // Timeout is extended to accommodate for lengthy parses

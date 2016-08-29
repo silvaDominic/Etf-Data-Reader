@@ -18,7 +18,7 @@ public class CsvDownloadController {
 
     public CsvDownloadController(){this.csvManager = new CsvManager();}
 
-    //TODO Can this logic be moved?
+    //TODO Implement
     @RequestMapping(value = "ETF/{etfSymbol}/downloadCsv")
     public void downloadCsv(@PathVariable String etfSymbol, HttpServletResponse response) throws IOException{
     }

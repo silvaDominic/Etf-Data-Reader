@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Component
 public class CsvUtil {
 
-    //TODO Implement with CsvDownload Controller logic if possible
+    //TODO Implement with logic if possible
     /**
      * Creates a CSV file of relevant ETF data.
      * A file is first created to allow for appending only data that exists.

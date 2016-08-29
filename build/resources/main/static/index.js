@@ -30,6 +30,7 @@ $(document).ready(function(){
         var action = $form.attr('action') + etf_input;
         var method = $form.attr('method');
         var data = 'undefined';
+        //TODO: Learn more about AmCharts
         var onComplete = function(response){
             var chart = AmCharts.makeChart("chartdiv", {
                 "type" : "serial",
