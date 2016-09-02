@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class LocalDataManager {
 
     private static final String DBURL = "jdbc:mysql://localhost:3306/ETF_DB?autoReconnect=true&useSSL=false";
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "roo7CLAUD1tis8";
 
     //TODO Fix Select All statement
     private static final String CHECK_FOR_DATA = "SELECT * FROM basic_etf_data WHERE etf_symbol = (?) LIMIT 1";
