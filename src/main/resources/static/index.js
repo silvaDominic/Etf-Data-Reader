@@ -32,20 +32,50 @@ $(document).ready(function(){
         var method = $form.attr('method');
         var data = 'undefined';
         var onComplete = function(response){
-            var chart;
-            var chartData = response.countryWeights;
+            var topTenHoldingsData = {
+                content : response.topTenHoldings,
+                chartBuildInfo : {
+                    titles : {
+                        chartTitle : [{"text" : "Top Ten Holdings", "size" : 30}],
+                        xAxisTitle : "Company",
+                        yAxisTitle : "Weight"
+                    },
+                    categoryField : 'company',
+                    valueField : 'weight',
+                    chartType : 'column',
+                    htmlId : 'topTenHoldingsChart'
+                    }
+            }
 
-            var chart = new AmCharts.AmSerialChart();
-            chart.dataProvider = chartData;
-            chart.categoryField = "country";
+            var countryWeightsData = {
+                content : response.countryWeights,
+                chartBuildInfo : {
+                    titles : {
+                        chartTitle : [{"text" : "Country Weights", "size" : 30}],
+                        xAxisTitle : "Country",
+                        yAxisTitle : "Weight"
+                    },
+                    categoryField : 'country',
+                    valueField : 'weight',
+                    chartType : 'column',
+                    htmlId : 'countryWeightsChart'
+                    }
+            }
 
-            var graph = new AmCharts.AmGraph();
-            graph.valueField = "weight";
-            graph.type = "column";
-            graph.fillAlphas = 1;
-            chart.addGraph(graph);
-
-            chart.write("chartdiv");
+            // No data is currently returned for Sector Weights
+/*            var sectorWeightsData = {
+                content : response.sectorWeights,
+                chartBuildInfo : {
+                    title : [{"text" : "Sector Weights", "size" : 30}],
+                    categoryField : 'sector',
+                    valueField : 'weight',
+                    chartType : 'column',
+                    htmlId : 'sectorWeightsChart'
+                    }
+            }*/
+            createChart(topTenHoldingsData);
+            createChart(countryWeightsData);
+            //createChart(sectorWeightsData);
         };
         var onFail = 'undefined';
         var onAlways = function() {$inputs.prop("disabled", false);}
@@ -56,6 +86,44 @@ $(document).ready(function(){
         // AJAX request for GETTING etf data
         ajaxCall(action, method, data, onComplete, onFail, onAlways);
     });
+
+    // Initialized and creates a chart
+    function createChart(dataObj){
+        if (dataObj.content === 'undefined') {return;}
+        chart = initChart(dataObj);
+        chart.write(dataObj.chartBuildInfo.htmlId);
+    }
+
+    // Initializes chart using dataObj; returns an initialized chart
+    function initChart(dataObj) {
+        chart = new AmCharts.AmSerialChart();
+        var categoryAxis = chart.categoryAxis;
+        var chartData = dataObj.content;
+
+        // Set chart properties
+        chart.dataProvider = chartData;
+        chart.categoryField = dataObj.chartBuildInfo.categoryField;
+        chart.titles = dataObj.chartBuildInfo.titles.chartTile;
+        //Set category axis properties
+        categoryAxis.title = dataObj.chartBuildInfo.titles.xAxisTitle;
+        categoryAxis.autoGridCount = false;
+        categoryAxis.gridCount = chartData.length;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.labelRotation = 90;
+        // Set value axes properties
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.title = dataObj.chartBuildInfo.titles.yAxisTitle;
+        chart.addValueAxis(valueAxis);
+
+        // Create new graph and set properties; add to chart
+        var graph = new AmCharts.AmGraph();
+        graph.valueField = dataObj.chartBuildInfo.valueField;
+        graph.type = dataObj.chartBuildInfo.chartType;
+        graph.fillAlphas = 1;
+        chart.addGraph(graph);
+
+        return chart;
+    }
 
     function ajaxCall(action, method, data, doneHelperFunction, failHelperFunction, alwaysHelperFunction){
         $.ajax({
