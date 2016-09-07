@@ -4,12 +4,12 @@ public class Holding {
 
     private String company;
     private double weight;
-    private int sharesHeld;
+    private int shares;
 
-    public Holding(String company, double weight, int sharesHeld){
+    public Holding(String company, double weight, int shares){
         this.company = company;
         this.weight = weight;
-        this.sharesHeld = sharesHeld;
+        this.shares = shares;
     }
 
     public String getCompany() {
@@ -20,7 +20,7 @@ public class Holding {
         return this.weight;
     }
 
-    public int getSharesHeld() {
-        return this.sharesHeld;
+    public int getShares() {
+        return this.shares;
     }
 }

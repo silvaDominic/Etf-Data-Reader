@@ -30,24 +30,51 @@ $(document).ready(function(){
         var action = $form.attr('action') + etf_input;
         var method = $form.attr('method');
         var data = 'undefined';
-        //TODO: Learn more about AmCharts
         var onComplete = function(response){
-            var chart;
-            //var chartData = response.countryWeights;
-            var chartData = '[{"country":"United States","weight":53.14},{"country":"Japan","weight":8.25},{"country":"United Kingdom","weight":6.41},{"country":"Canada","weight":3.23},{"country":"France","weight":3.1},{"country":"China","weight":3.09},{"country":"Germany","weight":2.86},{"country":"Switzerland","weight":2.73},{"country":"Australia","weight":2.62},{"country":"South Korea","weight":1.83},{"country":"Netherlands","weight":1.43},{"country":"Hong Kong","weight":1.42},{"country":"Taiwan","weight":1.37},{"country":"Sweden","weight":1.02},{"country":"Spain","weight":0.79},{"country":"South Africa","weight":0.68},{"country":"Denmark","weight":0.67},{"country":"India","weight":0.62},{"country":"Italy","weight":0.58},{"country":"Brazil","weight":0.5},{"country":"Indonesia","weight":0.47},{"country":"Mexico","weight":0.43},{"country":"Singapore","weight":0.42},{"country":"Belgium","weight":0.4},{"country":"Finland","weight":0.36},{"country":"Russia","weight":0.35},{"country":"Israel","weight":0.34},{"country":"Norway","weight":0.27},{"country":"Turkey","weight":0.18},{"country":"Thailand","weight":0.12},{"country":"Ireland","weight":0.09},{"country":"Hungary","weight":0.08},{"country":"Austria","weight":0.06},{"country":"Philippines","weight":0.05},{"country":"Chile","weight":0.03},{"country":"Peru","weight":0.01},{"country":"Colombia","weight":0.01}]'
-            chartData = $.parseJSON(chartData);
-            console.log("Country Weights JSON: ", chartData);
+            var topTenHoldingsData = {
+                content : response.topTenHoldings,
+                chartBuildInfo : {
+                    titles : {
+                        chartTitle : [{"text" : "Top Ten Holdings", "size" : 30}],
+                        xAxisTitle : "Company",
+                        yAxisTitle : "Weight"
+                    },
+                    categoryField : 'company',
+                    valueField : 'weight',
+                    chartType : 'column',
+                    htmlId : 'topTenHoldingsChart'
+                    }
+            }
 
-            chart = new AmCharts.AmSerialChart();
-            chart.dataProvider = chartData;
-            chart.categoryField = "Country";
+            var countryWeightsData = {
+                content : response.countryWeights,
+                chartBuildInfo : {
+                    titles : {
+                        chartTitle : [{"text" : "Country Weights", "size" : 30}],
+                        xAxisTitle : "Country",
+                        yAxisTitle : "Weight"
+                    },
+                    categoryField : 'country',
+                    valueField : 'weight',
+                    chartType : 'column',
+                    htmlId : 'countryWeightsChart'
+                    }
+            }
 
-            var graph = new AmCharts.AmGraph();
-            graph.title = "Country Weights";
-            graph.valueField = "Weight";
-            graph.type = "column";
-            chart.addGraph(graph);
-            chart.write("chartdiv");
+            // No data is currently returned for Sector Weights
+/*            var sectorWeightsData = {
+                content : response.sectorWeights,
+                chartBuildInfo : {
+                    title : [{"text" : "Sector Weights", "size" : 30}],
+                    categoryField : 'sector',
+                    valueField : 'weight',
+                    chartType : 'column',
+                    htmlId : 'sectorWeightsChart'
+                    }
+            }*/
+            createChart(topTenHoldingsData);
+            createChart(countryWeightsData);
+            //createChart(sectorWeightsData);
         };
         var onFail = 'undefined';
         var onAlways = function() {$inputs.prop("disabled", false);}
@@ -58,6 +85,44 @@ $(document).ready(function(){
         // AJAX request for GETTING etf data
         ajaxCall(action, method, data, onComplete, onFail, onAlways);
     });
+
+    // Initialized and creates a chart
+    function createChart(dataObj){
+        if (dataObj.content === 'undefined') {return;}
+        chart = initChart(dataObj);
+        chart.write(dataObj.chartBuildInfo.htmlId);
+    }
+
+    // Initializes chart using dataObj; returns an initialized chart
+    function initChart(dataObj) {
+        chart = new AmCharts.AmSerialChart();
+        var categoryAxis = chart.categoryAxis;
+        var chartData = dataObj.content;
+
+        // Set chart properties
+        chart.dataProvider = chartData;
+        chart.categoryField = dataObj.chartBuildInfo.categoryField;
+        chart.titles = dataObj.chartBuildInfo.titles.chartTile;
+        //Set category axis properties
+        categoryAxis.title = dataObj.chartBuildInfo.titles.xAxisTitle;
+        categoryAxis.autoGridCount = false;
+        categoryAxis.gridCount = chartData.length;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.labelRotation = 90;
+        // Set value axes properties
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.title = dataObj.chartBuildInfo.titles.yAxisTitle;
+        chart.addValueAxis(valueAxis);
+
+        // Create new graph and set properties; add to chart
+        var graph = new AmCharts.AmGraph();
+        graph.valueField = dataObj.chartBuildInfo.valueField;
+        graph.type = dataObj.chartBuildInfo.chartType;
+        graph.fillAlphas = 1;
+        chart.addGraph(graph);
+
+        return chart;
+    }
 
     function ajaxCall(action, method, data, doneHelperFunction, failHelperFunction, alwaysHelperFunction){
         $.ajax({

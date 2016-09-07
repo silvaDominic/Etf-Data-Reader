@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 public class DataController {
 
     private EtfDataManager etfDataManager;
-    private CsvManager csvManager;
 
     public DataController(){
         this.etfDataManager = new EtfDataManager();

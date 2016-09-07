@@ -26,7 +26,6 @@ $(document).ready(function(){
         // Briefly disables input fields during duration of AJAX request
         $inputs.prop("disabled", true);
 
-        //TODO Create chart data for all fields
         // AJAX request info
         var action = $form.attr('action') + etf_input;
         var method = $form.attr('method');

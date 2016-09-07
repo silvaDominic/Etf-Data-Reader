@@ -22,41 +22,57 @@ public class CsvUtil {
     /**
      * Creates a CSV file of relevant ETF data.
      * A file is first created to allow for appending only data that exists.
-     * @param holdings An array list of Holding objects
-     * @param countryWeights An array list of Country Weight objects
-     * @param sectorWeights An array list of Sector Weight objects
+     * @param etfObject The EtfData object that supplies data for CSV creation
+     * @param response An HttpResponse used to set content type and headers
      */
-/*    public static File createCsv(EtfData etfObject, HttpServletResponse response) {
+    public static void createCsv(EtfData etfObject, HttpServletResponse response) {
         String fileName = etfObject.getSymbol() + ".csv";
         ArrayList<Holding> holdings = etfObject.getTopTenHoldings();
         ArrayList<CountryWeight> countryWeights = etfObject.getCountryWeights();
         ArrayList<SectorWeight> sectorWeights = etfObject.getSectorWeights();
 
-        ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+        String[] topTenHoldingsHeaders = {"company", "weight", "shares"};
+        String[] countryWeightsHeaders = {"country", "weight"};
+        String[] sectorWeightsHeaders = {"sector", "weight"};
 
-        // If data exists add it to the CSV file
-        if(holdings != null){AppendTopTenHoldings(csvWriter, fileName, holdings);}
-        if(countryWeights != null){AppendCountryWeights(fileName, countryWeights);}
-        if (sectorWeights != null){AppendSectorWeights(fileName, sectorWeights);}
+        try {
+            ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 
-        response.setContentType("text/csv");
+            // If data exists add it to the CSV file
+            if (holdings != null) {
+                AppendTopTenHoldings(csvWriter, holdings, topTenHoldingsHeaders);
+            }
+            if (countryWeights != null) {
+                AppendCountryWeights(csvWriter, countryWeights, countryWeightsHeaders);
+            }
+            if (sectorWeights != null) {
+                AppendSectorWeights(csvWriter, sectorWeights, sectorWeightsHeaders);
+            }
 
-        //Set headers
-        String headerKey = "Content-Disposition";
-        String headerValue = String.format("attachment; filename=\"%s\" ", fileName);
-        response.setHeader(headerKey, headerValue);
-    }*/
+            response.setContentType("text/csv");
+
+            //Set headers
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\" ", fileName);
+            response.setHeader(headerKey, headerValue);
+
+            csvWriter.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
     //TODO Learn more about how writers work
     /**
      * Appends Top Ten Holding data to an existing CSV file
-     * @param filename The existing csv file
+     * @param writer The Csv writer used for writing ETF data to the CSV file
      * @param holdings An array list of Holding objects
+     * @param headers An array of headers that correspond to Holding properties
      */
-    private static void AppendTopTenHoldings(ICsvBeanWriter writer, String filename, ArrayList<Holding> holdings){
+    private static void AppendTopTenHoldings(ICsvBeanWriter writer, ArrayList<Holding> holdings, String[] headers){
         try {
             for (Holding holding : holdings) {
-                writer.write(holding.getCompany() + ", " + holding.getWeight() + ", " + holding.getSharesHeld() + "\n");
+                writer.write(holding, headers);
                 }
         } catch (IOException e) {
             System.out.println("Error: " + e);
@@ -65,16 +81,15 @@ public class CsvUtil {
 
     /**
      * Appends Country Weight data to an existing CSV file
-     * @param filename The existing csv file
+     * @param writer The Csv writer used for writing ETF data to the CSV file
      * @param countryWeights An array list of Country Weight objects
+     * @param headers An array of headers that correspond to CountryWeight properties
      */
-    private static void AppendCountryWeights(String filename, ArrayList<CountryWeight> countryWeights){
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(filename, true), "utf-8"))) {
+    private static void AppendCountryWeights(ICsvBeanWriter writer, ArrayList<CountryWeight> countryWeights, String[] headers){
+        try {
             for (CountryWeight countryWeight :  countryWeights) {
-                writer.write(countryWeight.getCountry() + ", " + countryWeight.getWeight() + "\n");
+                writer.write(countryWeight, headers);
             }
-            writer.write("\n");
         } catch (IOException e) {
             System.out.println("Error: " + e);
         }
@@ -82,16 +97,15 @@ public class CsvUtil {
 
     /**
      * Appends Sector Weight data to an existing CSV file
-     * @param filename The existing csv file
+     * @param writer The Csv writer used for writing ETF data to the CSV file
      * @param sectorWeights An array list of Sector Weight objects
+     * @param headers An array of headers that correspond to SectorWeight properties
      */
-    private static void AppendSectorWeights(String filename, ArrayList<SectorWeight> sectorWeights){
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(filename, true), "utf-8"))) {
+    private static void AppendSectorWeights(ICsvBeanWriter writer, ArrayList<SectorWeight> sectorWeights, String[] headers){
+        try {
             for (SectorWeight sectorWeight : sectorWeights) {
-                writer.write(sectorWeight.getSector() + ", " + sectorWeight.getWeight() + "\n");
+                writer.write(sectorWeight, headers);
             }
-            writer.write("\n");
         } catch (IOException e) {
             System.out.println("Error: " + e);
         }

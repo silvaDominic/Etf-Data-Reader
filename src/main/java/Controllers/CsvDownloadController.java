@@ -16,10 +16,13 @@ public class CsvDownloadController {
 
     private CsvManager csvManager;
 
-    public CsvDownloadController(){this.csvManager = new CsvManager();}
+    public CsvDownloadController(){
+        this.csvManager = new CsvManager();
+    }
 
     //TODO Implement
-    @RequestMapping(value = "ETF/{etfSymbol}/downloadCsv")
+    @RequestMapping(value = "/ETF/{etfSymbol}/downloadCsv")
     public void downloadCsv(@PathVariable String etfSymbol, HttpServletResponse response) throws IOException{
+        csvManager.getCsv(etfSymbol, response);
     }
 }

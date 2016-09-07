@@ -84,7 +84,7 @@ public class LocalDataManager {
                     statement.setString(1, etfObject.getSymbol());
                     statement.setString(2, holding.getCompany());
                     statement.setDouble(3, holding.getWeight());
-                    statement.setInt(4, holding.getSharesHeld());
+                    statement.setInt(4, holding.getShares());
                     statement.executeUpdate();
                     System.out.println("Successfully ADDED Top Ten Holdings data to data base");
                 }
